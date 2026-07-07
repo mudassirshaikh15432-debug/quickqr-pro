@@ -18,11 +18,14 @@ export default function App() {
 
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
-  
+  const [text, setText] = useState("");
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [wifiName, setWifiName] = useState("");
+  const [wifiPassword, setWifiPassword] = useState("");
+  const [encryption, setEncryption] = useState("WPA");
   const qrRef = useRef<HTMLDivElement>(null);
 
 const downloadPNG = async () => {
@@ -36,7 +39,7 @@ const downloadPNG = async () => {
   link.click();
 };
 
-  const qrValue =
+ const qrValue =
   activeTab === "url"
     ? url || "https://example.com"
     : activeTab === "whatsapp"
@@ -46,7 +49,11 @@ const downloadPNG = async () => {
     : activeTab === "email"
     ? `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
     : activeTab === "phone"
-? `tel:${phoneNumber}`
+    ? `tel:${phoneNumber}`
+    : activeTab === "text"
+    ? text || "Enter some text"
+    : activeTab === "wifi"
+    ? `WIFI:T:${encryption};S:${wifiName};P:${wifiPassword};;`
     : "https://example.com";
 
   return (
@@ -145,6 +152,55 @@ const downloadPNG = async () => {
       placeholder="+91 9876543210"
       className="w-full p-3 rounded-lg text-black"
     />
+  </>
+)}
+{activeTab === "text" && (
+  <>
+    <label className="block mb-2">
+      Enter Text
+    </label>
+
+    <textarea
+      value={text}
+      onChange={(e) => setText(e.target.value)}
+      placeholder="Write anything..."
+      className="w-full p-3 rounded-lg text-black"
+      rows={6}
+    />
+  </>
+)}
+{activeTab === "wifi" && (
+  <>
+    <label className="block mb-2">Wi-Fi Name (SSID)</label>
+
+    <input
+      value={wifiName}
+      onChange={(e) => setWifiName(e.target.value)}
+      placeholder="My WiFi"
+      className="w-full p-3 rounded-lg text-black"
+    />
+
+    <label className="block mt-5 mb-2">Password</label>
+
+    <input
+      type="password"
+      value={wifiPassword}
+      onChange={(e) => setWifiPassword(e.target.value)}
+      placeholder="Password"
+      className="w-full p-3 rounded-lg text-black"
+    />
+
+    <label className="block mt-5 mb-2">Encryption</label>
+
+    <select
+      value={encryption}
+      onChange={(e) => setEncryption(e.target.value)}
+      className="w-full p-3 rounded-lg text-black"
+    >
+      <option value="WPA">WPA/WPA2</option>
+      <option value="WEP">WEP</option>
+      <option value="nopass">No Password</option>
+    </select>
   </>
 )}
           </div>
