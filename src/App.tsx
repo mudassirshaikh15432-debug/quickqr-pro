@@ -3,7 +3,6 @@ import QRCode from "react-qr-code";
 import { toPng } from "html-to-image";
 import Header from "./components/layout/Header";
 import TypeTabs from "./components/tabs/TypeTabs";
-
 type Tab =
   | "url"
   | "whatsapp"
@@ -23,7 +22,7 @@ export default function App() {
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
-
+  const [phoneNumber, setPhoneNumber] = useState("");
   const qrRef = useRef<HTMLDivElement>(null);
 
 const downloadPNG = async () => {
@@ -46,6 +45,8 @@ const downloadPNG = async () => {
       : "https://example.com"
     : activeTab === "email"
     ? `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    : activeTab === "phone"
+? `tel:${phoneNumber}`
     : "https://example.com";
 
   return (
@@ -128,6 +129,20 @@ const downloadPNG = async () => {
     <textarea
       value={body}
       onChange={(e) => setBody(e.target.value)}
+      className="w-full p-3 rounded-lg text-black"
+    />
+  </>
+)}
+{activeTab === "phone" && (
+  <>
+    <label className="block mb-2">
+      Phone Number
+    </label>
+
+    <input
+      value={phoneNumber}
+      onChange={(e) => setPhoneNumber(e.target.value)}
+      placeholder="+91 9876543210"
       className="w-full p-3 rounded-lg text-black"
     />
   </>
