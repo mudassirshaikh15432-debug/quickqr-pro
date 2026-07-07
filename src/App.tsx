@@ -1,8 +1,16 @@
 import { useRef, useState } from "react";
 import QRCode from "react-qr-code";
 import { toPng } from "html-to-image";
+import Header from "./components/layout/Header";
+import TypeTabs from "./components/tabs/TypeTabs";
 
-type Tab = "url" | "whatsapp";
+type Tab =
+  | "url"
+  | "whatsapp"
+  | "email"
+  | "phone"
+  | "text"
+  | "wifi";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>("url");
@@ -11,6 +19,10 @@ export default function App() {
 
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
+  
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [body, setBody] = useState("");
 
   const qrRef = useRef<HTMLDivElement>(null);
 
@@ -26,50 +38,26 @@ const downloadPNG = async () => {
 };
 
   const qrValue =
-    activeTab === "url"
-      ? url || "https://example.com"
-      : phone
-      ? `https://wa.me/${phone.replace(/\D/g, "")}?text=${encodeURIComponent(
-          message
-        )}`
-      : "https://example.com";
+  activeTab === "url"
+    ? url || "https://example.com"
+    : activeTab === "whatsapp"
+    ? phone
+      ? `https://wa.me/${phone.replace(/\D/g, "")}?text=${encodeURIComponent(message)}`
+      : "https://example.com"
+    : activeTab === "email"
+    ? `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    : "https://example.com";
 
   return (
     <div className="min-h-screen bg-slate-900 text-white p-6">
       <div className="max-w-5xl mx-auto">
 
-        <h1 className="text-4xl font-bold text-center">
-          🚀 QuickQR Pro
-        </h1>
+      
 
-        <p className="text-center text-gray-400 mt-2">
-          Generate professional QR Codes instantly.
-        </p>
-
-        {/* Tabs */}
-        <div className="flex justify-center gap-4 mt-8">
-          <button
-            onClick={() => setActiveTab("url")}
-            className={`px-5 py-2 rounded-lg ${
-              activeTab === "url"
-                ? "bg-blue-600"
-                : "bg-slate-700"
-            }`}
-          >
-            🌐 URL
-          </button>
-
-          <button
-            onClick={() => setActiveTab("whatsapp")}
-            className={`px-5 py-2 rounded-lg ${
-              activeTab === "whatsapp"
-                ? "bg-green-600"
-                : "bg-slate-700"
-            }`}
-          >
-            💬 WhatsApp
-          </button>
-        </div>
+      <TypeTabs
+     activeTab={activeTab}
+     setActiveTab={setActiveTab}
+      />
 
         <div className="grid md:grid-cols-2 gap-10 mt-10">
 
@@ -115,6 +103,35 @@ const downloadPNG = async () => {
                 />
               </>
             )}
+            {activeTab === "email" && (
+  <>
+    <label>Email</label>
+
+    <input
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      placeholder="example@gmail.com"
+      className="w-full p-3 rounded-lg text-black"
+    />
+
+    <label className="block mt-4">Subject</label>
+
+    <input
+      value={subject}
+      onChange={(e) => setSubject(e.target.value)}
+      placeholder="Subject"
+      className="w-full p-3 rounded-lg text-black"
+    />
+
+    <label className="block mt-4">Message</label>
+
+    <textarea
+      value={body}
+      onChange={(e) => setBody(e.target.value)}
+      className="w-full p-3 rounded-lg text-black"
+    />
+  </>
+)}
           </div>
 
           {/* Right */}
