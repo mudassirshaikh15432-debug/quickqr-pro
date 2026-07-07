@@ -9,13 +9,12 @@ type Tab =
   | "email"
   | "phone"
   | "text"
-  | "wifi";
+  | "wifi"
+  | "upi";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>("url");
-
   const [url, setUrl] = useState("");
-
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [text, setText] = useState("");
@@ -26,6 +25,10 @@ export default function App() {
   const [wifiName, setWifiName] = useState("");
   const [wifiPassword, setWifiPassword] = useState("");
   const [encryption, setEncryption] = useState("WPA");
+  const [upiId, setUpiId] = useState("");
+  const [payeeName, setPayeeName] = useState("");
+  const [amount, setAmount] = useState("");
+  const [note, setNote] = useState("");
   const qrRef = useRef<HTMLDivElement>(null);
 
 const downloadPNG = async () => {
@@ -54,6 +57,9 @@ const downloadPNG = async () => {
     ? text || "Enter some text"
     : activeTab === "wifi"
     ? `WIFI:T:${encryption};S:${wifiName};P:${wifiPassword};;`
+    : activeTab === "upi"
+    ? `upi://pay?pa=${upiId}&pn=${encodeURIComponent(
+    payeeName)}&am=${amount}&tn=${encodeURIComponent(note)}`
     : "https://example.com";
 
   return (
@@ -201,6 +207,42 @@ const downloadPNG = async () => {
       <option value="WEP">WEP</option>
       <option value="nopass">No Password</option>
     </select>
+  </>
+)}
+{activeTab === "upi" && (
+  <>
+    <label className="block mb-2">UPI ID</label>
+    <input
+      value={upiId}
+      onChange={(e) => setUpiId(e.target.value)}
+      placeholder="name@oksbi"
+      className="w-full p-3 rounded-lg text-black"
+    />
+
+    <label className="block mt-4 mb-2">Payee Name</label>
+    <input
+      value={payeeName}
+      onChange={(e) => setPayeeName(e.target.value)}
+      placeholder="Mudassir"
+      className="w-full p-3 rounded-lg text-black"
+    />
+
+    <label className="block mt-4 mb-2">Amount</label>
+    <input
+      type="number"
+      value={amount}
+      onChange={(e) => setAmount(e.target.value)}
+      placeholder="100"
+      className="w-full p-3 rounded-lg text-black"
+    />
+
+    <label className="block mt-4 mb-2">Note</label>
+    <input
+      value={note}
+      onChange={(e) => setNote(e.target.value)}
+      placeholder="Payment"
+      className="w-full p-3 rounded-lg text-black"
+    />
   </>
 )}
           </div>
