@@ -6,7 +6,8 @@ type Tab =
   | "text"
   | "wifi"
   | "upi"
-  | "vcard";
+  | "vcard"
+  | "map";
 
 type Props = {
   activeTab: Tab;
@@ -22,6 +23,7 @@ const tabs = [
   { id: "wifi", label: "📶 Wi-Fi" },
   { id: "upi", label: "💳 UPI" },
   { id: "vcard", label: "📇 Contact" },
+  { id: "map", label: "📍 Maps" },
 ] as const;
 
 export default function TypeTabs({

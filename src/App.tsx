@@ -11,6 +11,7 @@ import WifiForm from "./components/forms/WifiForm";
 import UpiForm from "./components/forms/UpiForm";
 import QRPreview from "./components/qr/QRPreview";
 import VCardForm from "./components/forms/VCardForm";
+import MapForm from "./components/forms/MapForm";
 
 type Tab =
   | "url"
@@ -20,7 +21,8 @@ type Tab =
   | "text"
   | "wifi"
   | "upi"
-  | "vcard";
+  | "vcard"
+  | "map";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>("url");
@@ -38,14 +40,13 @@ export default function App() {
   const [upiId, setUpiId] = useState("");
   const [payeeName, setPayeeName] = useState("");
   const [amount, setAmount] = useState("");
-  const [note, setNote] = useState("");
-  
-  
+  const [note, setNote] = useState(""); 
   const [fullName, setFullName] = useState("");
   const [company, setCompany] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [website, setWebsite] = useState("");
   const [address, setAddress] = useState("");
+  const [location, setLocation] = useState("");
   const qrRef = useRef<HTMLDivElement>(null);
 
 const downloadPNG = async () => {
@@ -90,6 +91,8 @@ const downloadPNG = async () => {
   `ADR:${address}`,
   "END:VCARD",
 ].join("\n")
+    : activeTab === "map"
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`
     : "https://example.com";
 
   return (
@@ -183,6 +186,12 @@ const downloadPNG = async () => {
     setAddress={setAddress}
   />
 )}
+    {activeTab === "map" && (
+    <MapForm
+    location={location}
+    setLocation={setLocation}
+     />
+    )}
           </div>
 
           {/* Right */}
