@@ -3,6 +3,7 @@ import QRCode from "react-qr-code";
 import { toPng } from "html-to-image";
 import Header from "./components/layout/Header";
 import TypeTabs from "./components/tabs/TypeTabs";
+
 type Tab =
   | "url"
   | "whatsapp"
@@ -10,7 +11,8 @@ type Tab =
   | "phone"
   | "text"
   | "wifi"
-  | "upi";
+  | "upi"
+  | "vcard";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>("url");
@@ -29,6 +31,11 @@ export default function App() {
   const [payeeName, setPayeeName] = useState("");
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
+  const [contactName, setContactName] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [company, setCompany] = useState("");
+  const [website, setWebsite] = useState("");
   const qrRef = useRef<HTMLDivElement>(null);
 
 const downloadPNG = async () => {
@@ -60,6 +67,17 @@ const downloadPNG = async () => {
     : activeTab === "upi"
     ? `upi://pay?pa=${upiId}&pn=${encodeURIComponent(
     payeeName)}&am=${amount}&tn=${encodeURIComponent(note)}`
+    : activeTab === "vcard"
+? [
+    "BEGIN:VCARD",
+    "VERSION:3.0",
+    `FN:${contactName}`,
+    `TEL:${contactPhone}`,
+    `EMAIL:${contactEmail}`,
+    `ORG:${company}`,
+    `URL:${website}`,
+    "END:VCARD",
+  ].join("\n")
     : "https://example.com";
 
   return (
@@ -241,6 +259,49 @@ const downloadPNG = async () => {
       value={note}
       onChange={(e) => setNote(e.target.value)}
       placeholder="Payment"
+      className="w-full p-3 rounded-lg text-black"
+    />
+  </>
+)}
+{activeTab === "vcard" && (
+  <>
+    <label className="block mb-2">Full Name</label>
+    <input
+      value={contactName}
+      onChange={(e) => setContactName(e.target.value)}
+      placeholder="Mudassir Shaikh"
+      className="w-full p-3 rounded-lg text-black"
+    />
+
+    <label className="block mt-4 mb-2">Phone</label>
+    <input
+      value={contactPhone}
+      onChange={(e) => setContactPhone(e.target.value)}
+      placeholder="+91 9876543210"
+      className="w-full p-3 rounded-lg text-black"
+    />
+
+    <label className="block mt-4 mb-2">Email</label>
+    <input
+      value={contactEmail}
+      onChange={(e) => setContactEmail(e.target.value)}
+      placeholder="you@example.com"
+      className="w-full p-3 rounded-lg text-black"
+    />
+
+    <label className="block mt-4 mb-2">Company</label>
+    <input
+      value={company}
+      onChange={(e) => setCompany(e.target.value)}
+      placeholder="QuickQR Pro"
+      className="w-full p-3 rounded-lg text-black"
+    />
+
+    <label className="block mt-4 mb-2">Website</label>
+    <input
+      value={website}
+      onChange={(e) => setWebsite(e.target.value)}
+      placeholder="https://yourwebsite.com"
       className="w-full p-3 rounded-lg text-black"
     />
   </>
