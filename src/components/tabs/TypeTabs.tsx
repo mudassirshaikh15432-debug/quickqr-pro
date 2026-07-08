@@ -21,7 +21,7 @@ const tabs = [
   { id: "text", label: "📝 Text" },
   { id: "wifi", label: "📶 Wi-Fi" },
   { id: "upi", label: "💳 UPI" },
-  { id: "vcard", label: "👤 vCard" },
+  { id: "vcard", label: "📇 Contact" },
 ] as const;
 
 export default function TypeTabs({
